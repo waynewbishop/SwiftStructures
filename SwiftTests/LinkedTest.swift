@@ -134,7 +134,57 @@ class LinkedTest: XCTestCase {
             }
         }
     }
+    
+    func testEmptyLinkedList() {
+        
+        let linkedList = LinkedList<Int>()
+        XCTAssert(linkedList.count == 0 , "Linked list count should have been 0, but was \(linkedList.count) instead")
+        
+        linkedList.addLink(0)
+        linkedList.removeLinkAtIndex(0)
+        
+        XCTAssert(linkedList.count == 0 , "Linked list count should have been 0, but was \(linkedList.count) instead")
+    }
 
+    func testRemoveFirstIndex() {
+        
+        let linkedList = self.buildLinkedList()
+        let index = 0
+        
+        linkedList.removeLinkAtIndex(index)
+        let value = linkedList.linkAtIndex(index).key
+        let expectedValue = 2
+        
+        XCTAssert(value == expectedValue, "Linked list value should have been \(expectedValue), but was \(value) instead")
+        XCTAssert(linkedList.count == 5, "Linked list count should have been 5, but was \(linkedList.count) instead")
+    }
+    
+    func testRemoveAtIndex() {
+        
+        let linkedList = self.buildLinkedList()
+        let index = 2
+        
+        linkedList.removeLinkAtIndex(index)
+        let value = linkedList.linkAtIndex(index).key
+        let expectedValue = 9
+        
+        XCTAssert(value == expectedValue, "Linked list value should have been \(expectedValue), but was \(value) instead")
+        XCTAssert(linkedList.count == 5, "Linked list count should have been 5, but was \(linkedList.count) instead")
+    }
+
+    func testRemoveLastIndex() {
+        
+        let linkedList = self.buildLinkedList()
+        var index = 5
+        
+        linkedList.removeLinkAtIndex(index)
+        index -= 1
+        let value = linkedList.linkAtIndex(index).key
+        let expectedValue = 7
+        
+        XCTAssert(value == expectedValue, "Linked list value should have been \(expectedValue), but was \(value) instead")
+        XCTAssert(linkedList.count == 5, "Linked list count should have been 5, but was \(linkedList.count) instead")
+    }
     
 
     //MARK: helper functions
