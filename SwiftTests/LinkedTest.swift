@@ -103,6 +103,24 @@ class LinkedTest: XCTestCase {
             XCTFail("test failed: removed linked list element not found")
         }
         
+        // test insertion to non valid index
+        let counter = list.count
+        
+        list.insert(25, at: -1)
+        list.printAllKeys()
+        
+        if counter != list.count {
+            XCTFail("test failed: Counter mismatch after instertion")
+        }
+        
+        // test removing node at index 0
+        list.remove(at: 0)
+        list.printAllKeys()
+        
+        if list.count != counter - 1 {
+            XCTFail("test failed: Counter mismatch after removing node at index 0")
+        }
+        
         
     } //end function
     

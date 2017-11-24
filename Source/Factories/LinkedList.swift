@@ -134,6 +134,7 @@ class LinkedList<T: Equatable> {
         //check for nil conditions
         if ((index < 0) || (index > (self.count - 1))) {
             print("link index does not exist..")
+            return
         }
         
         
@@ -223,6 +224,7 @@ class LinkedList<T: Equatable> {
         if (index == 0) {
             current = current?.next
             head = current!
+            counter -= 1
             return
         }
         
