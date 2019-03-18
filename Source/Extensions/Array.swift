@@ -296,53 +296,51 @@ extension Array where Element: Comparable {
     
     mutating func quickSort() -> Array<Element> {
         
-        
-        func qSort(start startIndex: Int, _ pivot: Int) {
+        func sort(lo: Int, hi: Int) {
+            guard hi > lo else { return }
             
-            if (startIndex < pivot) {
-                let iPivot = qPartition(start: startIndex, pivot)
-                qSort(start: startIndex, iPivot - 1)
-                qSort(start: iPivot + 1, pivot)
-            }
+            let j = qPartition(lo: lo, hi: hi)
+            
+            sort(lo: lo, hi: j - 1)
+            sort(lo: j + 1, hi: hi)
         }
         
-        
-        qSort(start: 0, self.endIndex - 1)
+        sort(lo: 0, hi: self.endIndex - 1)
         return self
-        
     }
     
-    
-    
-    //sorts collection-range based on pivot
-    mutating func qPartition(start startIndex: Int, _ pivot: Int) -> Int {
+    mutating func qPartition(lo: Int, hi: Int) -> Int {
+        var i = lo
+        var j = hi + 1
         
-        var wallIndex: Int = startIndex
-        
-        
-        //compare range with pivot
-        for currentIndex in wallIndex..<pivot {
+        mainLoop: while true {
             
-            print("current is: \(self[currentIndex]). pivot is \(self[pivot])")
-            
-            if self[currentIndex] <= self[pivot] {
-                if wallIndex != currentIndex {
-                    self.swapAt(currentIndex, wallIndex)
+            // rewind i
+            insideLoop: repeat {
+                i += 1
+                if i == hi {
+                    break insideLoop
                 }
-                
-                //advance wall
-                wallIndex += 1
+            } while self[i] < self[lo]
+            
+            // rewind j
+            insideLoop: repeat {
+                j -= 1
+                if j == lo {
+                    break insideLoop
+                }
+            } while self[lo] < self[j]
+            
+            if i >= j {
+                break mainLoop
             }
+            
+            self.swapAt(i, j)
         }
         
+        self.swapAt(lo, j)
         
-        //move pivot to final position
-        if wallIndex != pivot {
-            self.swapAt(wallIndex, pivot)
-        }
-        
-        return wallIndex
-        
+        return j
     }
 
     

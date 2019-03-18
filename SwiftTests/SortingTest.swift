@@ -8,6 +8,7 @@
 
 import UIKit
 import XCTest
+import GameKit
 
 @testable import SwiftStructures
 
@@ -17,9 +18,20 @@ import XCTest
  the isSorted function originates from the protocol extension.
 */
 
+// size of [Int] array to test sorting algorithms
+public enum ArraySize: Int {
+    case k1 = 1000
+    case k2 = 2000
+    case k10 = 10_000
+    case k20 = 20_000
+    case k100 = 100_000
+    case k200 = 200_000
+    case m1 = 1_000_000
+}
 
 class SortingTest: XCTestCase, Sortable {
     
+    let duplicatesRatio = 0.9
     
     //test input types for algorithms
     var numberList = [8, 2, 10, 9, 7, 5]
@@ -129,6 +141,100 @@ class SortingTest: XCTestCase, Sortable {
         XCTAssert(isSorted(dateList.selectionSort()))
         
     }
+    
+    func testQuickSortDifferentTypesArrays() {
+        
+        XCTAssertTrue(isSorted(numberList.quickSort()))
+        XCTAssertTrue(isSorted(trivialNumberList.quickSort()))
+        XCTAssertTrue(isSorted(emptyNumberList.quickSort()))
+        XCTAssertTrue(isSorted(textList.quickSort()))
+        XCTAssertTrue(isSorted(triviaTextList.quickSort()))
+        XCTAssertTrue(isSorted(emptyTextList.quickSort()))
+        
+    }
+    
+    func testQuickSort() {
+        
+        let arrayToSort = Array(1...ArraySize.k10.rawValue)
+        
+        var shuffledArray = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: arrayToSort) as! [Int]
+        
+        let start = Date()
+        
+        print("Start to sort")
+        let sortedArr = shuffledArray.quickSort()
+        
+        let timePassed = Date().timeIntervalSince(start)
+        
+        print("timePassed = \(timePassed)")
+        
+        XCTAssertTrue(isSorted(sortedArr))
+        
+        // O(n log n)
+        // 1000     - 0.008
+        // 10_000    - 0.083
+        // 100_000   - 0.956
+        // 1_000_000  - 11.570
+        
+    }
+    
+    func testQuickSortWithDuplicates() {
+        
+        let arraySize = ArraySize.k1.rawValue
+        
+        let arrWithDuplicates = Array<Int>(repeating: 100, count: Int(Double(arraySize) * duplicatesRatio))
+        
+        var arrNonDuplicates = [Int]()
+        if duplicatesRatio != 1.0 {
+            arrNonDuplicates = Array(101...100 + arraySize - arrWithDuplicates.count)
+        }
+        
+        let arr = arrWithDuplicates + arrNonDuplicates
+        
+        var shuffledArray = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: arr) as! [Int]
+        
+        let start = Date()
+        
+        print("Start to sort")
+        
+        let sortedArr = shuffledArray.quickSort()
+        
+        let timePassed = Date().timeIntervalSince(start)
+        
+        print("timePassed = \(timePassed)")
+        
+        XCTAssertTrue(isSorted(sortedArr))
+        
+        // O(n log n)
+        // 1000     - 0.089
+        // 2000     - 0.425
+        // 10_000    - 8.796
+        
+    }
+    
+    func testQuickSortAlreadySortedArray() {
+        var arr = Array(1...ArraySize.k1.rawValue)
+        
+        let start = Date()
+        
+        print("Start to sort")
+        
+        let sortedArr = arr.quickSort()
+        
+        let timePassed = Date().timeIntervalSince(start)
+        
+        print("timePassed = \(timePassed)")
+        
+        XCTAssertTrue(isSorted(sortedArr))
+        
+        // O(n²)
+        // 1000     - 0.131
+        // 2000     - 0.398
+        // 10_000    - 8.918
+        
+    }
+    
+    
     
     
 }
